@@ -6,15 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-/**
- * Author vgrec, on 17.04.16.
- */
 public class SimpleItemAdapter extends RecyclerView.Adapter<SimpleItemAdapter.ItemViewHolder> {
 
     private String[] items;
+    private Multiselector multiselector;
 
-    public SimpleItemAdapter(String[] items) {
+    public SimpleItemAdapter(String[] items, Multiselector multiselector) {
         this.items = items;
+        this.multiselector = multiselector;
     }
 
     @Override
@@ -26,6 +25,7 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<SimpleItemAdapter.It
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         holder.itemTextView.setText(items[position]);
+        holder.itemView.setActivated(multiselector.isChecked(position));
     }
 
     @Override
@@ -44,7 +44,9 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<SimpleItemAdapter.It
 
         @Override
         public void onClick(View v) {
-
+            boolean isChecked = multiselector.isChecked(getAdapterPosition());
+            multiselector.onChecked(getAdapterPosition(), !isChecked);
+            itemView.setActivated(!isChecked);
         }
     }
 }
