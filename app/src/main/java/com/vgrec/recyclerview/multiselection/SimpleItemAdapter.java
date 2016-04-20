@@ -10,10 +10,12 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<SimpleItemAdapter.It
 
     private String[] items;
     private Multiselector multiselector;
+    private OnItemClickListener listener;
 
-    public SimpleItemAdapter(String[] items, Multiselector multiselector) {
+    public SimpleItemAdapter(String[] items, Multiselector multiselector, OnItemClickListener listener) {
         this.items = items;
         this.multiselector = multiselector;
+        this.listener = listener;
     }
 
     @Override
@@ -33,20 +35,26 @@ public class SimpleItemAdapter extends RecyclerView.Adapter<SimpleItemAdapter.It
         return items.length;
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnLongClickListener {
         TextView itemTextView;
 
         public ItemViewHolder(View view) {
             super(view);
             itemTextView = (TextView) view.findViewById(R.id.item);
             view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            boolean isChecked = multiselector.isChecked(getAdapterPosition());
-            multiselector.onChecked(getAdapterPosition(), !isChecked);
-            itemView.setActivated(!isChecked);
+            listener.onItemClick(v, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            listener.onItemLongPress(v, getAdapterPosition());
+            return true;
         }
     }
 }

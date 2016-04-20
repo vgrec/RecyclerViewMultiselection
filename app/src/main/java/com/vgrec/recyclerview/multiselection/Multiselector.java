@@ -1,6 +1,7 @@
 package com.vgrec.recyclerview.multiselection;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
@@ -8,6 +9,11 @@ import android.view.View;
  */
 public class Multiselector {
     private static final String CHECKED_STATES = "checked_states";
+    private RecyclerView recyclerView;
+
+    public Multiselector(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+    }
 
     private ParcelableSparseBooleanArray checkedItems = new ParcelableSparseBooleanArray();
 
@@ -24,15 +30,36 @@ public class Multiselector {
         }
     }
 
+    public void checkView(View view, int position) {
+        boolean isChecked = isChecked(position);
+        onChecked(position, !isChecked);
+        view.setActivated(!isChecked);
+    }
+
     public boolean isChecked(int position) {
         return checkedItems.get(position, false);
     }
 
-    public void onChecked(int position, boolean isChecked) {
+    private void onChecked(int position, boolean isChecked) {
         if (isChecked) {
             checkedItems.put(position, true);
         } else {
             checkedItems.delete(position);
         }
+    }
+
+    public int getCount() {
+        return checkedItems.size();
+    }
+
+    public void clearAll() {
+        for (int i = 0; i < checkedItems.size(); i++) {
+            int position = checkedItems.keyAt(i);
+            RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+            if (viewHolder != null) {
+                viewHolder.itemView.setActivated(false);
+            }
+        }
+        checkedItems.clear();
     }
 }
