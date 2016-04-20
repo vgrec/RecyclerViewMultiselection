@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String IS_ACTION_MODE = "IS_ACTION_MODE";
+    public static final String IS_IN_ACTION_MODE = "IS_IN_ACTION_MODE";
     private Multiselector multiselector;
     private ActionMode actionMode;
 
@@ -25,18 +25,25 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         multiselector = new Multiselector(recyclerView);
-        multiselector.onRestoreInstanceState(savedInstanceState);
 
         if (savedInstanceState != null) {
-            boolean isInActionMode = savedInstanceState.getBoolean(IS_ACTION_MODE);
-            if (isInActionMode) {
-                startActionMode();
-                updateActionModeTitle();
-            }
+            restoreSavedState(savedInstanceState);
         }
 
         SimpleItemAdapter adapter = new SimpleItemAdapter(generateDummyItems(), multiselector, itemClickListener);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void restoreSavedState(Bundle savedInstanceState) {
+        // Restores the checked states
+        multiselector.onRestoreInstanceState(savedInstanceState);
+
+        // Restore the action mode
+        boolean isInActionMode = savedInstanceState.getBoolean(IS_IN_ACTION_MODE);
+        if (isInActionMode) {
+            startActionMode();
+            updateActionModeTitle();
+        }
     }
 
     private void updateActionModeTitle() {
@@ -60,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         multiselector.onSaveInstanceState(outState);
-        outState.putBoolean(IS_ACTION_MODE, actionMode != null);
+        outState.putBoolean(IS_IN_ACTION_MODE, actionMode != null);
     }
 
     private OnItemClickListener itemClickListener = new OnItemClickListener() {
