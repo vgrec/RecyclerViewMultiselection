@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.delete:
-                    Toast.makeText(MainActivity.this, "Delete Action", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, R.string.items_cleared, Toast.LENGTH_LONG).show();
                     multiselector.clearAll();
                     mode.finish();
                     return true;
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             actionMode = null;
+            multiselector.clearAll();
         }
     };
 }

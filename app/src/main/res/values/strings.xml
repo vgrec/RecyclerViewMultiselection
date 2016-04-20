@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">RecyclerViewMultiselection</string>
     <string name="clear_all">Clear all</string>
+    <string name="items_cleared">Items cleared!</string>
 </resources>
